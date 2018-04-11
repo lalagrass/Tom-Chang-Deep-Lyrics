@@ -56,7 +56,7 @@ def main(_):
             # sentence state
             char_list = list(start_sentence);
             start_idx = char_to_idx[char_list[0]]
-            _state = mtest.initial_state.eval()
+            _state = session.run(mtest.initial_state)
             test_data = np.int32([start_idx])
             prob, _state = run_epoch(session, mtest, test_data, tf.no_op(), _state)
             gen_res = [char_list[0]]
@@ -90,7 +90,7 @@ def main(_):
             # sentence state
             char_list = list(start_sentence);
             start_idx = char_to_idx[char_list[0]]
-            _state = mtest.initial_state.eval()
+            _state = session.run(mtest.initial_state)
             beams = [(0.0, [idx_to_char[start_idx]], idx_to_char[start_idx])]
             test_data = np.int32([start_idx])
             prob, _state = run_epoch(session, mtest, test_data, tf.no_op(), _state)

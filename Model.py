@@ -12,11 +12,11 @@ class Model(object):
         self._input_data = tf.placeholder(tf.int32, [batch_size, num_steps])
         self._targets = tf.placeholder(tf.int32, [batch_size, num_steps]) # 宣告輸入變數 x, y
 
-        lstm_cell = tf.contrib.rnn.BasicLSTMCell(size, forget_bias=0.0, state_is_tuple=False)
+        lstm_cell = tf.contrib.rnn.LSTMCell(size, forget_bias=0.0)
         if is_training and config.keep_prob < 1:
             lstm_cell = tf.contrib.rnn.DropoutWrapper(
                 lstm_cell, output_keep_prob=config.keep_prob)
-        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell] * config.num_layers, state_is_tuple=False)
+        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell] * config.num_layers)
 
         self._initial_state = cell.zero_state(batch_size, tf.float32)
 

@@ -6,6 +6,7 @@ import os
 import Config
 import Model
 import pickle as cPickle
+import datetime
 
 
 if not os.path.exists('./model'):
@@ -57,7 +58,7 @@ def run_epoch(session, m, data, eval_op):
     start_time = time.time()
     costs = 0.0
     iters = 0
-    state = m.initial_state.eval()
+    state = session.run(m.initial_state)
     for step, (x, y) in enumerate(data_iterator(data, m.batch_size,
                                                     m.num_steps)):
         cost, state, _ = session.run([m.cost, m.final_state, eval_op], # x 和 y 的 shape 都是 (batch_size, num_steps)
@@ -68,8 +69,9 @@ def run_epoch(session, m, data, eval_op):
         iters += m.num_steps
 
         if step and step % (epoch_size // 10) == 0:
-            print("%.2f perplexity: %.3f cost-time: %.2f s" %
-                (step * 1.0 / epoch_size, np.exp(costs / iters),
+            print("[%s] %.2f perplexity: %.3f cost-time: %.2f s" %
+                (datetime.datetime.now().time(),
+                step * 1.0 / epoch_size, np.exp(costs / iters),
                  (time.time() - start_time)))
             start_time = time.time()
 
